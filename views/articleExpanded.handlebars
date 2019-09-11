@@ -5,30 +5,31 @@
     <div class='row'>
         <div class='col'>
             {{#each record}}
-            <card data-id="{{this._id}}" class='mb-2 p-3 card shadow news-card'>
+            <card data-id="{{this._id}}" class='mb-4 p-3 card shadow news-card'>
                 <strong>{{this.headline}}</strong>
                 <p>{{this.summary}}</p>
                 <small>Scraped from 9to5mac.com at {{this.scrapeTime}}</small>
                 <small>{{this.url}}</small>
             </card>
             {{/each}}
+            {{!-- Form Begin --}}
+            <form id='makeNewCommentForm'>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" class="form-control" id="user-name" placeholder="Username">
+                </div>
+                <div class="form-group">
+                    <label>Comment</label>
+                    <textarea class="form-control" id="comment-text" placeholder="Enter your comment here."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            {{!-- Form End --}}
         </div>
-    </div>
-    <br><br>
-    {{!-- Form Begin --}}
-    <form id='makeNewCommentForm'>
-        <div class="form-group">
-            <label>Username</label>
-            <input type="text" class="form-control" id="user-name" placeholder="Username">
+        <div class='col'>
+            <div id='commentsContainer' class='row mt-5'>
+            </div>
         </div>
-        <div class="form-group">
-            <label>Comment</label>
-            <textarea class="form-control" id="comment-text" placeholder="Enter your comment here."></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-    {{!-- Form End --}}
-    <div id='commentsContainer' class='row'>
     </div>
 </div>
 
@@ -44,6 +45,7 @@
             console.log(response);
             for (var i = 0; i < response.length; i++) {
                 $('#commentsContainer').append(`
+                <section class='col-12 mb-4'>
                     <div class="media pl-2" style="border-left: 1px solid gray">
                         <img src="https://opengameart.org/sites/default/files/Person_0.png" class="mr-3" height='50px' width='50px'>
                         <div class="media-body">
@@ -52,7 +54,7 @@
                             <small>Commented on the article at: ${response[i].associatedArticleURL}</small>
                         </div>
                     </div>
-                    <br>
+                </section>
             `)
             }
         });
@@ -82,7 +84,6 @@
                 articleId: $('.news-card').attr('data-id')
             }
         }).then(function (response) {
-            console.log(data)
             console.log(response);
             clearThenPullComments()
         })

@@ -71,7 +71,7 @@ app.get("/comments", function(req, res) {
 
 app.get("/comments/:articleid", function(req, res) {
   console.log(req.params.articleid);
-  db.Comment.find({ articleId: req.params.articleid })
+  db.Comment.find({ articleId: req.params.articleid }).sort({createTime: -1})
     .then(function(queryResult) {
       res.json(queryResult);
     })
