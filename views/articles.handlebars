@@ -1,13 +1,25 @@
 <div class='container'>
-    <div class='row'>
+    <br>
+    <a href='/scrape'><button class='btn btn-success' style="width: 100%">Pull New Articles</button></a>
+    <br><br>
+    <div class='row animated slideInRight'>
         <div class='col'>
             {{#each record}}
-            <card class='mb-2 p-3 card shadow'>
+            <card data-id="{{this._id}}" class='mb-2 p-3 card shadow news-card'>
                 <strong>{{this.headline}}</strong>
                 <p>{{this.summary}}</p>
+                <small>Scraped from 9to5mac.com at {{this.scrapeTime}}</small>
                 <small>{{this.url}}</small>
             </card>
             {{/each}}
         </div>
     </div>
 </div>
+
+<script>
+    $(document).on("click", ".news-card", function () {
+        let articleToPull = $(this).attr('data-id')
+        let url = `/articles/${articleToPull}`
+        window.location.replace(url)
+    })
+</script>

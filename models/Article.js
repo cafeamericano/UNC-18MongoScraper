@@ -15,7 +15,13 @@ var ArticleSchema = new Schema({
     type: String,
     required: true,
     unique: true
+  },
+  scrapeTime: {
+    type: Date
   }
+  // articleTime: {
+  //   type: Date,
+  // }
 });
 
 // Create model using defined schema

@@ -1,0 +1,15 @@
+<div class='container'>
+    <br><br>
+    <div class='row animated slideInRight'>
+        <div class='col'>
+            {{#each record}}
+            <card data-id="{{this._id}}" class='mb-2 p-3 card shadow'>
+                <strong>{{this.headline}}</strong>
+                <p>{{this.summary}}</p>
+                <small>Scraped from 9to5mac.com at {{this.scrapeTime}}</small>
+                <small>{{this.url}}</small>
+            </card>
+            {{/each}}
+        </div>
+    </div>
+</div>

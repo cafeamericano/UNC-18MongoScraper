@@ -4,6 +4,7 @@ var mongoose = require("mongoose");
 var axios = require("axios");
 var cheerio = require("cheerio");
 var exphbs = require("express-handlebars");
+var moment = require("moment");
 var app = express();
 
 //PORT
@@ -37,9 +38,19 @@ app.get("/", function(req, res) {
 });
 
 app.get("/articles", function(req, res) {
-  db.Article.find({})
+  db.Article.find({}).sort({"scrapeTime": -1})
     .then(function(queryResult) {
       res.render("articles", { record: queryResult });
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
+
+app.get("/articles/:id", function(req, res) {
+  db.Article.find({_id: req.params.id}).sort({"scrapeTime": -1})
+    .then(function(queryResult) {
+      res.render("articleExpanded", { record: queryResult });
     })
     .catch(function(err) {
       res.json(err);
@@ -77,6 +88,13 @@ app.get("/scrape", function(req, res) {
         .children("h1")
         .children("a")
         .attr("href");
+      result.scrapeTime = moment.now();
+      // result.articleTime = $(this)
+      //   .children("div")
+      //   .children("div")
+      //   .children("p[class='time-twitter']")
+      //   .text()
+      //   .trim();
 
       //Define how unwanted text will be dropped
       function chopOffUnwantedText() {
@@ -98,7 +116,8 @@ app.get("/scrape", function(req, res) {
       db.Article.create({
         headline: result.headline,
         summary: result.summary,
-        url: result.url
+        url: result.url,
+        scrapeTime: result.scrapeTime
       })
         .then(function(dbArticle) {
           console.log(dbArticle);
@@ -108,7 +127,7 @@ app.get("/scrape", function(req, res) {
         });
     });
     //Notify user on front-end that scrapping was performed
-    res.send("Scraping completed; articles added to database.");
+    res.redirect("/articles");
   });
 });
 
