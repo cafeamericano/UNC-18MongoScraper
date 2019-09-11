@@ -1,11 +1,11 @@
 <div class='container'>
     <div class='row'>
-        <div class='column'>
+        <div class='col'>
             {{#each record}}
             <card class='mb-2 p-3 card shadow'>
-                <strong>{{this.headline}}</strong>
-                <p>{{this.summary}}</p>
-                <small>{{this.url}}</small>
+                <strong>{{this.user}}</strong>
+                <p>{{this.commentText}}</p>
+                <small>{{this.associatedArticleURL}}</small>
             </card>
             {{/each}}
         </div>

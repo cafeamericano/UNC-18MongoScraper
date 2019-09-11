@@ -33,13 +33,23 @@ app.set("view engine", "handlebars");
 
 //Routes/////////////////////////////////////////////////////////
 app.get("/", function(req, res) {
-  res.send("Welcome to scraper.");
+  res.render("home");
 });
 
 app.get("/articles", function(req, res) {
   db.Article.find({})
     .then(function(queryResult) {
-      res.render("index", { record: queryResult });
+      res.render("articles", { record: queryResult });
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
+
+app.get("/comments", function(req, res) {
+  db.Comment.find({})
+    .then(function(queryResult) {
+      res.render("comments", { record: queryResult });
     })
     .catch(function(err) {
       res.json(err);
