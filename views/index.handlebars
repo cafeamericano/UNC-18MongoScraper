@@ -1,0 +1,13 @@
+<div class='container'>
+    <div class='row'>
+        <div class='column'>
+            {{#each record}}
+            <card class='mb-2 p-3 card shadow'>
+                <strong>{{this.headline}}</strong>
+                <p>{{this.summary}}</p>
+                <small>{{this.url}}</small>
+            </card>
+            {{/each}}
+        </div>
+    </div>
+</div>

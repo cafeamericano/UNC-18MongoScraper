@@ -3,6 +3,7 @@ var express = require("express");
 var mongoose = require("mongoose");
 var axios = require("axios");
 var cheerio = require("cheerio");
+var exphbs = require("express-handlebars");
 var app = express();
 
 //PORT
@@ -21,46 +22,35 @@ mongoose.connect("mongodb://localhost/week18homework", {
   useNewUrlParser: true
 });
 
-//Routes
+// Handlebars
+app.engine(
+  "handlebars",
+  exphbs({
+    defaultLayout: "main"
+  })
+);
+app.set("view engine", "handlebars");
+
+//Routes/////////////////////////////////////////////////////////
 app.get("/", function(req, res) {
-  res.send("hit home route");
+  res.send("Welcome to scraper.");
 });
 
-app.post("/addanarticle", function(req, res) {
-  db.Article.create({
-    headline: req.body.headline,
-    summary: req.body.summary,
-    url: req.body.url
-  })
-    .then(function(dbArticle) {
-      console.log(dbArticle);
-      res.send("Added article.");
+app.get("/articles", function(req, res) {
+  db.Article.find({})
+    .then(function(queryResult) {
+      res.render("index", { record: queryResult });
     })
     .catch(function(err) {
-      console.log(err);
-    });
-});
-
-app.post("/addacomment", function(req, res) {
-  db.Comment.create({
-    user: req.body.user,
-    commentText: req.body.commentText,
-    associatedArticleURL: req.body.associatedArticleURL
-  })
-    .then(function(dbComment) {
-      console.log(dbComment);
-      res.send("Added comment.");
-    })
-    .catch(function(err) {
-      console.log(err);
+      res.json(err);
     });
 });
 
 app.get("/scrape", function(req, res) {
   axios.get("https://9to5mac.com/").then(function(response) {
     var $ = cheerio.load(response.data);
-    var resultArr = [];
     $("article").each(function(i, element) {
+      //Define how we'd like to structure each result object
       var result = {};
       result.headline = $(this)
         .children("div")
@@ -94,11 +84,52 @@ app.get("/scrape", function(req, res) {
       //Perform the removal of unwanted text
       chopOffUnwantedText();
 
-      //Add in the result object to the array of results
-      resultArr.push(result);
+      //Add in the result object to the database
+      db.Article.create({
+        headline: result.headline,
+        summary: result.summary,
+        url: result.url
+      })
+        .then(function(dbArticle) {
+          console.log(dbArticle);
+        })
+        .catch(function(err) {
+          console.log(err);
+        });
     });
-    res.json(resultArr);
+    //Notify user on front-end that scrapping was performed
+    res.send("Scraping completed; articles added to database.");
   });
+});
+
+app.post("/addanarticle", function(req, res) {
+  db.Article.create({
+    headline: req.body.headline,
+    summary: req.body.summary,
+    url: req.body.url
+  })
+    .then(function(dbArticle) {
+      console.log(dbArticle);
+      res.send("Added article.");
+    })
+    .catch(function(err) {
+      console.log(err);
+    });
+});
+
+app.post("/addacomment", function(req, res) {
+  db.Comment.create({
+    user: req.body.user,
+    commentText: req.body.commentText,
+    associatedArticleURL: req.body.associatedArticleURL
+  })
+    .then(function(dbComment) {
+      console.log(dbComment);
+      res.send("Added comment.");
+    })
+    .catch(function(err) {
+      console.log(err);
+    });
 });
 
 //Start server
