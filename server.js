@@ -26,11 +26,11 @@ app.get("/", function(req, res) {
   res.send("hit home route");
 });
 
-app.get("/addanarticle", function(req, res) {
+app.post("/addanarticle", function(req, res) {
   db.Article.create({
-    headline: "Apple",
-    summary: "It's a red fruit",
-    url: "Too sugary."
+    headline: req.body.headline,
+    summary: req.body.summary,
+    url: req.body.url
   })
     .then(function(dbArticle) {
       console.log(dbArticle);
@@ -41,11 +41,11 @@ app.get("/addanarticle", function(req, res) {
     });
 });
 
-app.get("/addacomment", function(req, res) {
+app.post("/addacomment", function(req, res) {
   db.Comment.create({
-    user: "johnsmith",
-    commentText: "No way.",
-    associatedArticleURL: "Too sugary."
+    user: req.body.user,
+    commentText: req.body.commentText,
+    associatedArticleURL: req.body.associatedArticleURL
   })
     .then(function(dbComment) {
       console.log(dbComment);
@@ -54,6 +54,30 @@ app.get("/addacomment", function(req, res) {
     .catch(function(err) {
       console.log(err);
     });
+});
+
+app.get("/scrape", function(req, res) {
+  axios.get("https://9to5mac.com/").then(function(response) {
+    var $ = cheerio.load(response.data);
+    var resultArr = [];
+    $("article").each(function(i, element) {
+      var result = {};
+      result.headline = $(this)
+        .children("div")
+        .children("h1")
+        .children("a")
+        .text();
+      result.summary = $(this)
+        .children("a")
+        .attr("href");
+      result.url = $(this)
+        .children("a")
+        .attr("href");
+      console.log(result);
+      resultArr.push(result);
+    });
+    res.json(resultArr);
+  });
 });
 
 //Start server
