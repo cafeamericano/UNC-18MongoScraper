@@ -68,12 +68,33 @@ app.get("/scrape", function(req, res) {
         .children("a")
         .text();
       result.summary = $(this)
-        .children("a")
-        .attr("href");
+        .children("div")
+        .children("div[itemprop='articleBody']")
+        .children("p")
+        .text();
       result.url = $(this)
+        .children("div")
+        .children("h1")
         .children("a")
         .attr("href");
-      console.log(result);
+
+      //Define how unwanted text will be dropped
+      function chopOffUnwantedText() {
+        let fullText = result.summary;
+        let fullTextLength = result.summary.length;
+        let eliminateTextLength = "expand full story ".length + 1;
+        let keepTextLength = fullTextLength - eliminateTextLength;
+        var holdData = "";
+        for (var i = 0; i < keepTextLength; i++) {
+          holdData += fullText[i];
+        }
+        result.summary = holdData;
+      }
+
+      //Perform the removal of unwanted text
+      chopOffUnwantedText();
+
+      //Add in the result object to the array of results
       resultArr.push(result);
     });
     res.json(resultArr);
