@@ -59,6 +59,16 @@ app.get("/articles/:id", function(req, res) {
     });
 });
 
+app.delete("/articles/:id", function(req, res) {
+  db.Article.find({ _id: req.params.id }).remove()
+    .then(function() {
+      res.send('Article deleted.');
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
+
 app.get("/comments", function(req, res) {
   db.Comment.find({})
     .then(function(queryResult) {
@@ -74,6 +84,16 @@ app.get("/comments/:articleid", function(req, res) {
   db.Comment.find({ articleId: req.params.articleid }).sort({createTime: -1})
     .then(function(queryResult) {
       res.json(queryResult);
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
+
+app.delete("/comments/:id", function(req, res) {
+  db.Comment.find({ _id: req.params.id }).remove()
+    .then(function() {
+      res.send('Comment deleted.');
     })
     .catch(function(err) {
       res.json(err);

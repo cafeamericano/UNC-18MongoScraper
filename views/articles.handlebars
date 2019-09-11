@@ -5,11 +5,16 @@
     <div class='row'>
         <div class='col'>
             {{#each record}}
-            <card data-id="{{this._id}}" class='mb-2 p-3 card shadow news-card'>
-                <strong>{{this.headline}}</strong>
-                <p>{{this.summary}}</p>
-                <small>Scraped from 9to5mac.com at {{this.scrapeTime}}</small>
-                <small>{{this.url}}</small>
+            <card class='mb-2 p-3 card shadow'>
+                <div>
+                    <div data-id="{{this._id}}" class='deleteButton text-right'><i class="fas fa-times"></i></div>
+                </div>
+                <div data-id="{{this._id}}" class="card-body news-card">
+                    <strong>{{this.headline}}</strong>
+                    <p>{{this.summary}}</p>
+                    <small>Scraped from 9to5mac.com at {{this.scrapeTime}}</small>
+                    <small>{{this.url}}</small>
+                </div>
             </card>
             {{/each}}
         </div>
@@ -24,5 +29,18 @@
         setTimeout(() => {
             window.location.replace(url)
         }, 400)
+    })
+</script>
+
+<script>
+    $(document).on("click", ".deleteButton", function () {
+        let articleToDelete = $(this).attr('data-id')
+        $.ajax({
+            url: 'articles/' + articleToDelete,
+            method: "DELETE",
+        }).then(function (response) {
+            console.log(response);
+        })
+        $(this).parent().parent().fadeOut()
     })
 </script>

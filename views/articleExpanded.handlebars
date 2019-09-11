@@ -43,20 +43,30 @@
             method: "GET",
         }).then(function (response) {
             console.log(response);
-            for (var i = 0; i < response.length; i++) {
-                $('#commentsContainer').append(`
+            if (response.length !== 0) {
+                for (var i = 0; i < response.length; i++) {
+                    $('#commentsContainer').append(`
                 <section class='col-12 mb-4'>
                     <div class="media pl-2" style="border-left: 1px solid gray">
                         <img src="https://opengameart.org/sites/default/files/Person_0.png" class="mr-3" height='50px' width='50px'>
                         <div class="media-body">
                             <h5 class="mt-0">${response[i].user}</h5>
                             <p>${response[i].commentText}</p>
-                            <small>Commented on the article at: ${response[i].associatedArticleURL}</small>
+                            <small>Commented at: ${response[i].associatedArticleURL}</small>
+                            <br>
+                            <small data-id=${response[i]._id} class='deleteButton'><i class="far fa-trash-alt"></i></small>
                         </div>
                     </div>
                 </section>
             `)
+                }
+            } else {
+                $('#commentsContainer').append(`
+                <div class="alert alert-warning col" role="alert">
+                    No comments exist for this article yet.
+                </div>`)
             }
+
         });
     }
     clearThenPullComments()
@@ -87,5 +97,18 @@
             console.log(response);
             clearThenPullComments()
         })
+    })
+</script>
+
+<script>
+    $(document).on("click", ".deleteButton", function () {
+        let commentToDelete = $(this).attr('data-id')
+        $.ajax({
+            url: '/comments/' + commentToDelete,
+            method: "DELETE",
+        }).then(function (response) {
+            console.log(response);
+        })
+        $(this).parent().parent().parent().fadeOut()
     })
 </script>
