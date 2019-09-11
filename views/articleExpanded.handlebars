@@ -1,6 +1,8 @@
-<div class='container'>
+<div class='container animated fadeInRight'>
+    <br>
+    <button id='goBackToArticles' class='btn btn-success' style="width: 100%">Return to Main Page</button></a>
     <br><br>
-    <div class='row animated slideInRight'>
+    <div class='row'>
         <div class='col'>
             {{#each record}}
             <card data-id="{{this._id}}" class='mb-2 p-3 card shadow news-card'>
@@ -13,7 +15,7 @@
         </div>
     </div>
     <br><br>
-    <div id='commentsContainer' class='row animated slideInRight'>
+    <div id='commentsContainer' class='row'>
     </div>
 </div>
 
@@ -39,4 +41,14 @@
             `)
         }
     });
+</script>
+
+<script>
+    $(document).on("click", "#goBackToArticles", function () {
+        let url = `/articles`
+        $('.container').addClass('animated fadeOutRight')
+        setTimeout(() => {
+            window.location.replace(url)
+        }, 400)
+    })
 </script>
