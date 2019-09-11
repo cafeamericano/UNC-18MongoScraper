@@ -19,7 +19,8 @@ app.use(express.static("public"));
 var db = require("./models");
 
 //Connect to database
-mongoose.connect("mongodb://localhost/week18homework", {
+var dbURL = process.env.MONGODB_URI || "mongodb://localhost/week18homework";
+mongoose.connect(dbURL, {
   useNewUrlParser: true
 });
 
@@ -60,9 +61,10 @@ app.get("/articles/:id", function(req, res) {
 });
 
 app.delete("/articles/:id", function(req, res) {
-  db.Article.find({ _id: req.params.id }).remove()
+  db.Article.find({ _id: req.params.id })
+    .remove()
     .then(function() {
-      res.send('Article deleted.');
+      res.send("Article deleted.");
     })
     .catch(function(err) {
       res.json(err);
@@ -81,7 +83,8 @@ app.get("/comments", function(req, res) {
 
 app.get("/comments/:articleid", function(req, res) {
   console.log(req.params.articleid);
-  db.Comment.find({ articleId: req.params.articleid }).sort({createTime: -1})
+  db.Comment.find({ articleId: req.params.articleid })
+    .sort({ createTime: -1 })
     .then(function(queryResult) {
       res.json(queryResult);
     })
@@ -91,9 +94,10 @@ app.get("/comments/:articleid", function(req, res) {
 });
 
 app.delete("/comments/:id", function(req, res) {
-  db.Comment.find({ _id: req.params.id }).remove()
+  db.Comment.find({ _id: req.params.id })
+    .remove()
     .then(function() {
-      res.send('Comment deleted.');
+      res.send("Comment deleted.");
     })
     .catch(function(err) {
       res.json(err);
