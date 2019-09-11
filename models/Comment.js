@@ -5,7 +5,8 @@ var Schema = mongoose.Schema;
 var CommentSchema = new Schema({
   user: String,
   commentText: String,
-  articleId: String
+  articleId: String,
+  createTime: Date
 });
 
 // Create model using defined schema

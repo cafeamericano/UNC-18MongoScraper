@@ -157,7 +157,8 @@ app.post("/addacomment", function(req, res) {
   db.Comment.create({
     user: req.body.user,
     commentText: req.body.commentText,
-    articleId: req.body.articleId
+    articleId: req.body.articleId,
+    createTime: moment.now()
   })
     .then(function(dbComment) {
       console.log(dbComment);
