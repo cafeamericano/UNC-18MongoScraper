@@ -19,9 +19,6 @@ var ArticleSchema = new Schema({
   scrapeTime: {
     type: Date
   }
-  // articleTime: {
-  //   type: Date,
-  // }
 });
 
 // Create model using defined schema

@@ -38,7 +38,8 @@ app.get("/", function(req, res) {
 });
 
 app.get("/articles", function(req, res) {
-  db.Article.find({}).sort({"scrapeTime": -1})
+  db.Article.find({})
+    .sort({ scrapeTime: -1 })
     .then(function(queryResult) {
       res.render("articles", { record: queryResult });
     })
@@ -48,7 +49,8 @@ app.get("/articles", function(req, res) {
 });
 
 app.get("/articles/:id", function(req, res) {
-  db.Article.find({_id: req.params.id}).sort({"scrapeTime": -1})
+  db.Article.find({ _id: req.params.id })
+    .sort({ scrapeTime: -1 })
     .then(function(queryResult) {
       res.render("articleExpanded", { record: queryResult });
     })
@@ -61,6 +63,17 @@ app.get("/comments", function(req, res) {
   db.Comment.find({})
     .then(function(queryResult) {
       res.render("comments", { record: queryResult });
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
+
+app.get("/comments/:articleid", function(req, res) {
+  console.log(req.params.articleid);
+  db.Comment.find({ articleId: req.params.articleid })
+    .then(function(queryResult) {
+      res.json(queryResult);
     })
     .catch(function(err) {
       res.json(err);
@@ -89,12 +102,6 @@ app.get("/scrape", function(req, res) {
         .children("a")
         .attr("href");
       result.scrapeTime = moment.now();
-      // result.articleTime = $(this)
-      //   .children("div")
-      //   .children("div")
-      //   .children("p[class='time-twitter']")
-      //   .text()
-      //   .trim();
 
       //Define how unwanted text will be dropped
       function chopOffUnwantedText() {
@@ -150,7 +157,7 @@ app.post("/addacomment", function(req, res) {
   db.Comment.create({
     user: req.body.user,
     commentText: req.body.commentText,
-    associatedArticleURL: req.body.associatedArticleURL
+    articleId: req.body.articleId
   })
     .then(function(dbComment) {
       console.log(dbComment);

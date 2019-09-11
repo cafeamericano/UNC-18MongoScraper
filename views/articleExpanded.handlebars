@@ -3,7 +3,7 @@
     <div class='row animated slideInRight'>
         <div class='col'>
             {{#each record}}
-            <card data-id="{{this._id}}" class='mb-2 p-3 card shadow'>
+            <card data-id="{{this._id}}" class='mb-2 p-3 card shadow news-card'>
                 <strong>{{this.headline}}</strong>
                 <p>{{this.summary}}</p>
                 <small>Scraped from 9to5mac.com at {{this.scrapeTime}}</small>
@@ -12,4 +12,31 @@
             {{/each}}
         </div>
     </div>
+    <br><br>
+    <div id='commentsContainer' class='row animated slideInRight'>
+    </div>
 </div>
+
+<script>
+    let articleToPull = $('.news-card').attr('data-id')
+    let url = `/comments/${articleToPull}`
+    $.ajax({
+        url: url,
+        method: "GET",
+    }).then(function (response) {
+        console.log(response);
+        for (var i = 0; i < response.length; i++) {
+            $('#commentsContainer').append(`
+                    <div class="media pl-2" style="border-left: 1px solid gray">
+                        <img src="https://opengameart.org/sites/default/files/Person_0.png" class="mr-3" height='50px' width='50px'>
+                        <div class="media-body">
+                            <h5 class="mt-0">${response[i].user}</h5>
+                            <p>${response[i].commentText}</p>
+                            <small>Commented on the article at: ${response[i].associatedArticleURL}</small>
+                        </div>
+                    </div>
+                    <br>
+            `)
+        }
+    });
+</script>
