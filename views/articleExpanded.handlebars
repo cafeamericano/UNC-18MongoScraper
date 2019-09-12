@@ -13,7 +13,7 @@
             </card>
             {{/each}}
             {{!-- Form Begin --}}
-            <form id='makeNewCommentForm'>
+            <form id='makeNewCommentForm' class='card p-3'>
                 <div class="form-group">
                     <label>Username</label>
                     <input type="text" class="form-control" id="user-name" placeholder="Username">
@@ -46,7 +46,7 @@
             if (response.length !== 0) {
                 for (var i = 0; i < response.length; i++) {
                     $('#commentsContainer').append(`
-                <section class='col-12 mb-4'>
+                <section class='col-12 mb-4 card p-3'>
                     <div class="media pl-2" style="border-left: 1px solid gray">
                         <img src="https://opengameart.org/sites/default/files/Person_0.png" class="mr-3" height='50px' width='50px'>
                         <div class="media-body">
