@@ -41,8 +41,21 @@ app.get("/", function(req, res) {
 app.get("/articles", function(req, res) {
   db.Article.find({})
     .sort({ scrapeTime: -1 })
+    .populate("comments")
     .then(function(queryResult) {
       res.render("articles", { record: queryResult });
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
+
+app.get("/api/articles", function(req, res) {
+  db.Article.find({})
+    .sort({ scrapeTime: -1 })
+    .populate("comments")
+    .then(function(queryResult) {
+      res.json(queryResult);
     })
     .catch(function(err) {
       res.json(err);
@@ -52,8 +65,21 @@ app.get("/articles", function(req, res) {
 app.get("/articles/:id", function(req, res) {
   db.Article.find({ _id: req.params.id })
     .sort({ scrapeTime: -1 })
+    .populate("comments")
     .then(function(queryResult) {
       res.render("articleExpanded", { record: queryResult });
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
+
+app.get("/api/articles/:id", function(req, res) {
+  db.Article.find({ _id: req.params.id })
+    .sort({ scrapeTime: -1 })
+    .populate("comments")
+    .then(function(queryResult) {
+      res.json(queryResult);
     })
     .catch(function(err) {
       res.json(err);
@@ -177,22 +203,6 @@ app.post("/addanarticle", function(req, res) {
     });
 });
 
-// app.post("/addacomment", function(req, res) {
-//   db.Comment.create({
-//     user: req.body.user,
-//     commentText: req.body.commentText,
-//     articleId: req.body.articleId,
-//     createTime: moment.now()
-//   })
-//     .then(function(dbComment) {
-//       console.log(dbComment);
-//       res.send("Added comment.");
-//     })
-//     .catch(function(err) {
-//       console.log(err);
-//     });
-// });
-
 app.post("/addacomment", function(req, res) {
   db.Comment.create({
     user: req.body.user,
@@ -202,7 +212,7 @@ app.post("/addacomment", function(req, res) {
   })
     .then(function(dbComment) {
       return db.Article.findOneAndUpdate(
-        {},
+        { _id: req.body.articleId },
         { $push: { comments: dbComment._id } },
         { new: true }
       );
@@ -213,18 +223,6 @@ app.post("/addacomment", function(req, res) {
     })
     .catch(function(err) {
       console.log(err);
-    });
-});
-
-app.get("/articles1/:id", function(req, res) {
-  db.Article.find({ _id: req.params.id })
-    .sort({ scrapeTime: -1 })
-    .populate("comments")
-    .then(function(queryResult) {
-      res.json(queryResult);
-    })
-    .catch(function(err) {
-      res.json(err);
     });
 });
 
