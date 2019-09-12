@@ -4,7 +4,7 @@
             <div class="card-columns">
                 {{#each record}}
                 <div class='col'>
-                    <card class='mb-2 p-3 card shadow'>
+                    <card class='mb-4 p-3 card shadow'>
                         <div>
                             <div data-id="{{this._id}}" class='deleteButton text-right'><i class="fas fa-times"></i>
                             </div>
@@ -16,7 +16,9 @@
                             <small>{{this.url}}</small>
                         </div>
                         <div class='text-right'>
-                            <span class="badge badge-pill badge-info">{{this.comments.length}} comments</span>
+                            {{#if this.comments}}
+                            <span class="badge badge-pill badge-info"><i class="fas fa-comment-alt"></i> {{this.comments.length}}</span>
+                            {{/if}}
                         </div>
                     </card>
                 </div>

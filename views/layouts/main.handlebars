@@ -43,6 +43,9 @@
   {{!-- MomentJS --}}
   <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
 
+  {{!-- Inflation Effect for Cards --}}
+  <script src='inflation.js'></script>
+
   {{!-- Style --}}
   <Style>
     body {
@@ -63,6 +66,20 @@
       display: flex;
       justify-content: center;
       align-items: center
+    }
+
+    .inflated {
+      transform: scale(1.06);
+      transition: transform 250ms ease-in-out;
+    }
+
+    .deflated {
+      transform: scale(1.0);
+      transition: transform 250ms ease-in-out;
+    }
+
+    .news-card {
+      cursor: pointer
     }
 
     @media (max-width: 991px) {
