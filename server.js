@@ -35,7 +35,7 @@ app.set("view engine", "handlebars");
 
 //Routes/////////////////////////////////////////////////////////
 app.get("/", function(req, res) {
-  res.redirect("/articles");
+  res.redirect("/scrape");
 });
 
 app.get("/articles", function(req, res) {

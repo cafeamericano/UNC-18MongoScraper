@@ -42,25 +42,61 @@
 
   {{!-- MomentJS --}}
   <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
-  
+
+  {{!-- Style --}}
+  <Style>
+    body {
+      background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80');
+      background-size: cover;
+      background-repeat: repeat;
+      background-attachment: fixed;
+    }
+
+    #pseudoCover {
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      height: 100%;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.671);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center
+    }
+  </Style>
 </head>
 
-
-
-<body class='bg-light'>
-  <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-success">
-    <a class="navbar-brand" href="#">Mongo News Scraper</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
+<body class='bg-light' style="position: relative">
+  <nav class="mt-4 navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+    <div class='col text-left'>
+      <a class="navbar-brand" href="#">Mongo News Scraper</a>
+    </div>
+    <div class='col text-right text-light'>
+      <a href='/scrape' style="color: white"><i class="fas fa-download fa-2x"></i></a>
     </div>
   </nav>
   <div class="pt-3 mt-5">
     {{{body}}}
   </div>
+  <div id='pseudoCover'>
+    <section style="opacity: 1">
+      <div class='row'>
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem; margin: auto" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+      <div class='row text-center'>
+        <div class='text-light'>Loading new articles.</div>
+      </div>
+    </section>
+  </div>
+  <script>
+    function hidePseudoCover() {
+      $('#pseudoCover').fadeOut()
+    }
+    setTimeout(() =>  hidePseudoCover(), 800 )
+  </script>
 </body>
 
 </html>
