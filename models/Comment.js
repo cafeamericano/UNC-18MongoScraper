@@ -6,7 +6,7 @@ var CommentSchema = new Schema({
   user: String,
   commentText: String,
   articleId: String,
-  createTime: Date
+  createTime: Date,
 });
 
 // Create model using defined schema

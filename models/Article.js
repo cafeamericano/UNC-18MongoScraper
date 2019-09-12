@@ -18,7 +18,13 @@ var ArticleSchema = new Schema({
   },
   scrapeTime: {
     type: Date
-  }
+  },
+  comments: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Comment"
+    }
+  ]
 });
 
 // Create model using defined schema

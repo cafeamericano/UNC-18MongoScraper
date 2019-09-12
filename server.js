@@ -177,6 +177,22 @@ app.post("/addanarticle", function(req, res) {
     });
 });
 
+// app.post("/addacomment", function(req, res) {
+//   db.Comment.create({
+//     user: req.body.user,
+//     commentText: req.body.commentText,
+//     articleId: req.body.articleId,
+//     createTime: moment.now()
+//   })
+//     .then(function(dbComment) {
+//       console.log(dbComment);
+//       res.send("Added comment.");
+//     })
+//     .catch(function(err) {
+//       console.log(err);
+//     });
+// });
+
 app.post("/addacomment", function(req, res) {
   db.Comment.create({
     user: req.body.user,
@@ -185,11 +201,30 @@ app.post("/addacomment", function(req, res) {
     createTime: moment.now()
   })
     .then(function(dbComment) {
-      console.log(dbComment);
-      res.send("Added comment.");
+      return db.Article.findOneAndUpdate(
+        {},
+        { $push: { comments: dbComment._id } },
+        { new: true }
+      );
+    })
+    .then(function(dbArticle) {
+      console.log(dbArticle);
+      res.json(dbArticle);
     })
     .catch(function(err) {
       console.log(err);
+    });
+});
+
+app.get("/articles1/:id", function(req, res) {
+  db.Article.find({ _id: req.params.id })
+    .sort({ scrapeTime: -1 })
+    .populate("comments")
+    .then(function(queryResult) {
+      res.json(queryResult);
+    })
+    .catch(function(err) {
+      res.json(err);
     });
 });
 
