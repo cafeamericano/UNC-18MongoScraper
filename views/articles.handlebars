@@ -11,13 +11,14 @@
                         </div>
                         <div data-id="{{this._id}}" class="card-body news-card">
                             <strong>{{this.headline}}</strong>
-                            <p>{{this.summary}}</p>
+                            <span>{{this.summary}}</span> <small><a href='{{this.url}}'>Read full article.</a></small>
+                            <br><br>
                             <small>Scraped from 9to5mac.com at {{this.scrapeTime}}</small>
-                            <small>{{this.url}}</small>
                         </div>
                         <div class='text-right'>
                             {{#if this.comments}}
-                            <span class="badge badge-pill badge-info"><i class="fas fa-comment-alt"></i> {{this.comments.length}}</span>
+                            <span class="badge badge-pill badge-info"><i class="fas fa-comment-alt"></i>
+                                {{this.comments.length}}</span>
                             {{/if}}
                         </div>
                     </card>

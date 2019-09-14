@@ -1,19 +1,23 @@
 <div class='container animated fadeInRight'>
     <br>
-    <button id='goBackToArticles' class='btn btn-success' style="width: 100%">Return to Main Page</button></a>
+    <button id='goBackToArticles' class='btn'><i class="fas fa-backward fa-2x text-primary"></i></i></button></a>
     <br><br>
     <div class='row'>
         <div class='col'>
             {{#each record}}
             <card data-id="{{this._id}}" class='mb-4 p-3 card shadow news-card'>
                 <strong>{{this.headline}}</strong>
+                <br>
                 <p>{{this.summary}}</p>
-                <small>Scraped from 9to5mac.com at {{this.scrapeTime}}</small>
-                <small>{{this.url}}</small>
+                <small id='scrapeTime' data-scrapeTime='{{this.scrapeTime}}'>Scraped from 9to5mac.com at
+                    {{this.scrapeTime}}</small>
+                <br>
+                <small><a href='{{this.url}}'>Read full article.</a></small>
             </card>
             {{/each}}
             {{!-- Form Begin --}}
             <form id='makeNewCommentForm' class='card p-3'>
+                <h5>Add a Comment</h5>
                 <div class="form-group">
                     <label>Username</label>
                     <input type="text" class="form-control" id="user-name" placeholder="Username">
@@ -34,6 +38,15 @@
 </div>
 
 <script>
+    function formatScrapeTime() {
+        let time = $('#scrapeTime').attr('data-scrapeTime')
+        let formattedTime = moment(time).format("YYYY-MM-DD h:mm:ss A");
+        console.log(formattedTime)
+        $('#scrapeTime').text(`Scraped from 9to5mac.com at ${formattedTime}.`)
+    }
+</script>
+
+<script>
     function clearThenPullComments() {
         $('#commentsContainer').empty()
         let articleToPull = $('.news-card').attr('data-id')
@@ -47,14 +60,13 @@
                 for (var i = 0; i < response.length; i++) {
                     $('#commentsContainer').append(`
                 <section class='col-12 mb-4 card p-3'>
-                    <div class="media pl-2" style="border-left: 1px solid gray">
+                    <div class='text-right'><small data-id=${response[i]._id} class='deleteButton'><i class="far fa-trash-alt fa-lg"></i></small></div>
+                    <div class="media pl-2">
                         <img src="https://opengameart.org/sites/default/files/Person_0.png" class="mr-3" height='50px' width='50px'>
                         <div class="media-body">
                             <h5 class="mt-0">${response[i].user}</h5>
                             <p>${response[i].commentText}</p>
-                            <small>Commented at: ${response[i].createTime}</small>
-                            <br>
-                            <small data-id=${response[i]._id} class='deleteButton'><i class="far fa-trash-alt"></i></small>
+                            <small class='commentTime' data-commentTime='${response[i].createTime}'>Commented at: ${response[i].createTime}</small>
                         </div>
                     </div>
                 </section>
@@ -70,6 +82,7 @@
         });
     }
     clearThenPullComments()
+    formatScrapeTime()
 </script>
 
 <script>
